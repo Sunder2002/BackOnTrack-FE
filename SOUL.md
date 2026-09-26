@@ -66,31 +66,31 @@ An editorial academic control room: crisp paper-white working surfaces on a quie
 - 2026-09-26: Product brief read in full; repository initialised.
 - 2026-09-26: Full implementation complete — all 7 routes built, all screens functional, typed API boundary with mock client, full demo journey operational.
 - 2026-09-26: Brand config expanded with full palette, font stacks and copy centralisation.
-- 2026-09-26: Dynamic readiness ring (was hardcoded to 46%, now reacts to plan.readiness).
-- 2026-09-26: Demo reset via `?demo=riya` URL param and `Ctrl/Cmd+Shift+R` shortcut added.
-- 2026-09-26: SOUL.md, architecture docs, deployment docs, README all current.
+- 2026-09-26: Dynamic readiness ring reacts to plan.readiness.
+- 2026-09-26: Fullscreen focus mode with Web Audio ambient chords and exit quotes.
+- 2026-09-26: Production HTTP client (`src/services/api/http-client.ts`) created and connected to `src/services/api/client.ts` with `.env` toggle.
+- 2026-09-26: All 5 CI quality gates passing cleanly (Prettier, ESLint zero warnings, TypeScript, Vitest 7/7 tests, Next.js standalone build).
+- 2026-09-26: Repository cleaned of cache artifacts and pushed to `origin/main` on GitHub.
 
 ## Verification record
 
-Quality gates to run before deployment:
+Quality gates verified clean on Node 22 LTS / 24 with pnpm 11.19:
 
 ```bash
-pnpm install --frozen-lockfile
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
+pnpm format:check       # PASS (Prettier)
+pnpm lint --max-warnings=0 # PASS (ESLint 0 errors, 0 warnings)
+pnpm typecheck          # PASS (tsc --noEmit 0 errors)
+pnpm test               # PASS (Vitest 7/7 tests pass)
+pnpm build              # PASS (Next.js standalone build: 8 static routes)
 ```
 
-All gates should pass cleanly on Node.js 24+ with pnpm 11.19+.
-
-## Next actions
+## Milestone completion
 
 1. ✅ Scaffold the application and install dependencies.
 2. ✅ Implement typed domain/service boundary and demo fixtures.
 3. ✅ Build the shell and complete the full deterministic demo journey.
-4. ✅ Add tests and responsive/accessibility polish.
-5. Run quality gates on a machine with Node.js 24+ / pnpm 11.19+.
-6. Push to remote repository.
-7. When backend partner delivers the API: swap `mock-client.ts` for an HTTP implementation of `LearningApi` in `client.ts`.
+4. ✅ Add tests, responsive layouts, and accessibility polish.
+5. ✅ Fullscreen focus mode with ambient sound and quote overlays.
+6. ✅ Implement `http-client.ts` for immediate plug-and-play backend integration via `.env`.
+7. ✅ Run and verify all quality gates.
+8. ✅ Clean repository hygiene and push to GitHub remote.

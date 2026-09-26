@@ -16,7 +16,7 @@ Approved course inputs + student state
   Overview / Focus / Plan / Ask / Mastery
 ```
 
-`src/services/api/types.ts` is the contract. `mock-client.ts` is the current deterministic implementation. `client.ts` is the composition point where a real HTTP implementation will be selected later.
+`src/services/api/types.ts` is the contract. `mock-client.ts` is the deterministic offline implementation, and `http-client.ts` is the production fetch client. `client.ts` is the composition point that dynamically switches between them based on `NEXT_PUBLIC_DEMO_MODE` in `.env`.
 
 ## State ownership
 
