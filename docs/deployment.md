@@ -5,7 +5,7 @@
 ### Managed Next.js host
 
 1. Connect the GitHub repository.
-2. Use Node.js 24 and pnpm.
+2. Use Node.js 20+ (Node 22 LTS or Node 24 recommended) and pnpm.
 3. Build with `pnpm build`.
 4. Start with the platform's standard Next.js runtime.
 

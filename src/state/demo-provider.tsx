@@ -116,15 +116,15 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("demo") === "riya") {
-      resetDemo();
+      queueMicrotask(() => {
+        resetDemo();
+      });
       // Clean the URL without reload
       const url = new URL(window.location.href);
       url.searchParams.delete("demo");
       window.history.replaceState({}, "", url.pathname);
     }
-    // Run only on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resetDemo]);
 
   const value = useMemo(
     () => ({

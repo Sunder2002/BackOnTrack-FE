@@ -28,14 +28,18 @@ The versions were selected against the official Next.js, Tailwind, shadcn/Radix,
 
 ## Run locally
 
-Requirements: Node.js 24+ and pnpm 11.19+.
+Requirements: Node.js 20+ and pnpm 11.19+.
 
 ```bash
+# Copy sample environment configuration
+cp .env.example .env.local
+
+# Install dependencies and start development server
 pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [http://localhost:3000/student](http://localhost:3000/student).
+Open [http://localhost:3000/student](http://localhost:3000/student) in your browser.
 
 ## Quality gates
 
@@ -53,24 +57,43 @@ The same gates run in GitHub Actions for pushes to `main` and for pull requests.
 
 ```text
 src/
-  app/                    Next.js routes, metadata and route-level states
-  components/             Product surfaces grouped by responsibility
-  config/brand.ts         Central working brand, proposition and theme identity
-  data/demo/              Deterministic pitch fixtures only
-  services/api/           Typed backend boundary and swappable mock client
-  state/                  Cross-route deterministic demo state
-  test/                   Interaction-level demo flow tests
-public/                   Local brand assets
-.github/workflows/        Reproducible CI quality gates
-docs/                     Architecture and deployment notes
-SOUL.md                   Durable work-continuation and product memory
+  app/                    Next.js App Router routes, metadata, and layouts
+  components/             Modular, accessible React components
+    app-shell/            Navigation bar, command palette, and layout framing
+    ask/                  Intent-driven time budget adjustments
+    brand/                Consistent branding & visual identity
+    faculty/              Privacy-conscious professor overview
+    focus/                Fullscreen distraction-free session with ambient sound
+    mastery/              Topic mastery visualizer and progress audit
+    overview/             Student overview, urgent nudges, and next best block
+    plan/                 Dynamic study block sequence and rerouting panel
+    sources/              Curriculum syllabus, lecture, and rubric grounding
+    ui/                   Accessible primitives (Radix-backed)
+  config/                 Centralized brand identity and copy
+  data/demo/              Deterministic demo fixtures
+  services/api/           Typed API layer: client, mock client, and HTTP client
+  state/                  Global application state & reactive recalculation
+  test/                   End-to-end user flow interaction tests
+public/                   Static assets, icons, and metadata
+.github/workflows/        Automated GitHub Actions CI quality gates
+docs/                     Architecture specifications and deployment guides
+SOUL.md                   Durable product vision and continuity document
 ```
 
-## API boundary
+## Backend integration
 
-UI components consume `LearningApi` from `src/services/api/types.ts`. The current binding in `src/services/api/client.ts` points to a deterministic mock client. A future HTTP client can implement the same interface and replace that binding without moving fixture logic into React components.
+The frontend is architected with a strict service interface (`LearningApi` in `src/services/api/types.ts`). By default, the application runs against `mockLearningApi`.
 
-No demo fixture is represented as production AI. Source labels explicitly mean “approved in the demo dataset,” not external certification.
+To connect to a live backend (FastAPI, Go, Node.js, Spring Boot, etc.):
+
+1. In your `.env` or `.env.local`:
+   ```env
+   NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com/api
+   NEXT_PUBLIC_DEMO_MODE=false
+   ```
+2. The client in `src/services/api/client.ts` automatically delegates all requests to `src/services/api/http-client.ts`, which sends standard JSON requests to the endpoints documented in `docs/architecture.md`.
+
+No component code requires changes when connecting a backend.
 
 ## Keyboard and accessibility
 

@@ -2,7 +2,9 @@
 .github
 .next
 node_modules
+.pnpm-store
 coverage
 *.log
 .env*
 !.env.example
+*.tsbuildinfo

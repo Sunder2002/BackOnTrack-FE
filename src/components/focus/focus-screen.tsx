@@ -132,10 +132,7 @@ export function FocusScreen() {
   const [exitQuoteOpen, setExitQuoteOpen] = useState(false);
 
   const audioRef = useRef<AudioEngine | null>(null);
-  const quoteRef = useRef(
-    exitQuotes[Math.floor(Math.random() * exitQuotes.length)],
-  );
-  const quote = quoteRef.current;
+  const [quote, setQuote] = useState(exitQuotes[0]);
 
   /* â”€â”€ fullscreen â”€â”€ */
   const enterFullscreen = useCallback(async () => {
@@ -161,6 +158,7 @@ export function FocusScreen() {
   useEffect(() => {
     const handler = () => {
       if (!document.fullscreenElement) {
+        setQuote(exitQuotes[Math.floor(Math.random() * exitQuotes.length)]);
         setExitQuoteOpen(true);
       }
     };
@@ -644,4 +642,3 @@ export function FocusScreen() {
     </div>
   );
 }
-

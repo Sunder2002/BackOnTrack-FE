@@ -14,7 +14,10 @@ import type {
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/api";
 
-async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
+async function apiFetch<T>(
+  endpoint: string,
+  options?: RequestInit,
+): Promise<T> {
   const url = `${BASE_URL.replace(/\/$/, "")}/${endpoint.replace(/^\//, "")}`;
   const response = await fetch(url, {
     ...options,
@@ -42,11 +45,16 @@ export const httpLearningApi: LearningApi = {
   getCoachNudges: () => apiFetch<Nudge[]>("coach/nudges"),
   getSources: () => apiFetch<SourceReference[]>("sources"),
   getRecommendationEvidence: (topicId: string) =>
-    apiFetch<RecommendationEvidence>(`topics/${encodeURIComponent(topicId)}/evidence`),
+    apiFetch<RecommendationEvidence>(
+      `topics/${encodeURIComponent(topicId)}/evidence`,
+    ),
   submitMasteryCheck: (topicId: string) =>
-    apiFetch<MasteryCheckResult>(`topics/${encodeURIComponent(topicId)}/mastery-check`, {
-      method: "POST",
-    }),
+    apiFetch<MasteryCheckResult>(
+      `topics/${encodeURIComponent(topicId)}/mastery-check`,
+      {
+        method: "POST",
+      },
+    ),
   updateTimeBudget: (hours: number) =>
     apiFetch<BudgetUpdateResult>("plan/budget", {
       method: "POST",
