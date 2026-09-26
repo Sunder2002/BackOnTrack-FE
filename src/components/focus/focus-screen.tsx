@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import * as Progress from "@radix-ui/react-progress";
@@ -11,7 +11,6 @@ import {
   Clock3,
   Lightbulb,
   Music2,
-  MusicOff,
   Pause,
   Route,
   Volume2,
@@ -591,7 +590,7 @@ export function FocusScreen() {
               <BrandMark />
             </div>
             <div className="exit-quote-icon" aria-hidden="true">
-              {audioEnabled ? <Music2 size={32} /> : <MusicOff size={32} />}
+              {audioEnabled ? <Music2 size={32} /> : <VolumeX size={32} />}
             </div>
             <blockquote className="exit-quote-text">
               <p>&ldquo;{quote.quote}&rdquo;</p>
