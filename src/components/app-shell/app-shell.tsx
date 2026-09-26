@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  AlertTriangle,
   BookOpenCheck,
   BrainCircuit,
   ChevronRight,
@@ -198,6 +199,65 @@ export function AppShell({ children }: { children: ReactNode }) {
                   ) : null}
                 </article>
               ))}
+
+              {/* DANGER: Backlog fee alert & Parent reality check */}
+              <article className="coach-card backlog-danger-card">
+                <div className="danger-header">
+                  <span className="danger-eyebrow">
+                    <span className="danger-dot" aria-hidden="true" />
+                    ACADEMIC DANGER · REALITY CHECK
+                  </span>
+                </div>
+
+                <div
+                  className="backlog-fee-alert"
+                  aria-label="Danger: Backlog fee ₹3,500 only"
+                >
+                  <div className="backlog-fee-inner">
+                    <AlertTriangle className="backlog-fee-icon" size={22} />
+                    <div className="backlog-fee-text">
+                      <span className="backlog-fee-tag">DANGER IF SKIPPED</span>
+                      <strong className="backlog-fee-title">
+                        Backlog fee ₹3,500 only
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+
+                <p className="backlog-danger-desc">
+                  If you don&apos;t study and clear Operating Systems on Friday,
+                  mandatory university supplementary backlog fee applies.
+                </p>
+
+                <div className="parent-reality-box">
+                  <div className="parent-photo-container">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/parent_photo.jpg"
+                      alt="Parents expecting your success"
+                      className="parent-photo"
+                      width={300}
+                      height={225}
+                    />
+                    <div className="parent-photo-badge">
+                      <span>FAMILY EXPECTATION</span>
+                    </div>
+                  </div>
+                  <p className="parent-quote">
+                    &ldquo;Mom &amp; Dad worked hard for this college fee.
+                    Don&apos;t let their sacrifices turn into a backlog.&rdquo;
+                  </p>
+                </div>
+
+                <Button
+                  variant="danger"
+                  size="sm"
+                  onClick={startFocus}
+                  className="danger-cta-btn"
+                >
+                  Clear backlog risk: Start 35 min <ChevronRight size={15} />
+                </Button>
+              </article>
             </div>
           </aside>
         </div>
