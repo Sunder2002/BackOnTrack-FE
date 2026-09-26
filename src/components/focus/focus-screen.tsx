@@ -28,8 +28,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useDemo } from "@/state/demo-provider";
+import {
+  createStudyMusicEngine,
+  type StudyMusicEngine,
+} from "@/lib/study-audio";
 
-/* â”€â”€â”€ step definitions â”€â”€â”€ */
+/* --- step definitions --- */
 
 const steps = [
   { id: 1, label: "Refresh concept", minutes: 8 },
@@ -38,86 +42,32 @@ const steps = [
   { id: 4, label: "Mastery check", minutes: 7 },
 ];
 
-/* â”€â”€â”€ exit quotes â”€â”€â”€ */
+/* --- exit quotes --- */
 
 const exitQuotes = [
+  {
+    quote: "Now if you are not on BackOnTrack, you will be on railway track.",
+    attribution: "BackOnTrack",
+  },
+  {
+    quote: "ESC works here. Friday still arrives on schedule.",
+    attribution: "BackOnTrack",
+  },
   {
     quote: "Focus is the art of knowing what to ignore.",
     attribution: "Cal Newport",
   },
   {
-    quote: "One session at a time. You showed up â€” that's the whole game.",
-    attribution: "BackOnTrack",
-  },
-  {
-    quote: "Clarity follows attention. You gave it today.",
+    quote: "One session at a time. You showed up — that's the whole game.",
     attribution: "BackOnTrack",
   },
   {
     quote: "The CPU can run one process at a time. So can you.",
-    attribution: "CPU Scheduling Â· today's block",
+    attribution: "CPU Scheduling · today's block",
   },
 ];
 
-/* â”€â”€â”€ ambient audio engine â”€â”€â”€ */
-
-type AudioEngine = { stop: () => void };
-
-function createAmbientAudio(): AudioEngine | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const ctx = new AudioContext();
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const osc3 = ctx.createOscillator();
-    const g1 = ctx.createGain();
-    const g2 = ctx.createGain();
-    const g3 = ctx.createGain();
-    const master = ctx.createGain();
-    const comp = ctx.createDynamicsCompressor();
-
-    osc1.type = "sine";
-    osc1.frequency.value = 110;
-    osc2.type = "sine";
-    osc2.frequency.value = 164.81;
-    osc3.type = "sine";
-    osc3.frequency.value = 220.05;
-
-    g1.gain.value = 0.04;
-    g2.gain.value = 0.03;
-    g3.gain.value = 0.025;
-    master.gain.value = 0;
-
-    osc1.connect(g1);
-    osc2.connect(g2);
-    osc3.connect(g3);
-    [g1, g2, g3].forEach((g) => g.connect(comp));
-    comp.connect(master);
-    master.connect(ctx.destination);
-
-    osc1.start();
-    osc2.start();
-    osc3.start();
-
-    master.gain.linearRampToValueAtTime(1, ctx.currentTime + 2);
-
-    const stop = () => {
-      master.gain.linearRampToValueAtTime(0, ctx.currentTime + 1.5);
-      window.setTimeout(() => {
-        osc1.stop();
-        osc2.stop();
-        osc3.stop();
-        void ctx.close();
-      }, 1600);
-    };
-
-    return { stop };
-  } catch {
-    return null;
-  }
-}
-
-/* â”€â”€â”€ component â”€â”€â”€ */
+/* --- component --- */
 
 export function FocusScreen() {
   const router = useRouter();
@@ -131,7 +81,7 @@ export function FocusScreen() {
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [exitQuoteOpen, setExitQuoteOpen] = useState(false);
 
-  const audioRef = useRef<AudioEngine | null>(null);
+  const audioEngineRef = useRef<StudyMusicEngine | null>(null);
   const [quote, setQuote] = useState(exitQuotes[0]);
 
   /* â”€â”€ fullscreen â”€â”€ */
@@ -158,7 +108,7 @@ export function FocusScreen() {
   useEffect(() => {
     const handler = () => {
       if (!document.fullscreenElement) {
-        setQuote(exitQuotes[Math.floor(Math.random() * exitQuotes.length)]);
+        setQuote(exitQuotes[0]);
         setExitQuoteOpen(true);
       }
     };
@@ -192,21 +142,24 @@ export function FocusScreen() {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
-  /* â”€â”€ audio â”€â”€ */
-  const toggleAudio = useCallback(() => {
+  /* ── audio ── */
+  const toggleAudio = useCallback(async () => {
+    if (!audioEngineRef.current) {
+      audioEngineRef.current = createStudyMusicEngine();
+    }
+    const engine = audioEngineRef.current;
     if (!audioEnabled) {
-      audioRef.current = createAmbientAudio();
+      await engine.start();
       setAudioEnabled(true);
     } else {
-      audioRef.current?.stop();
-      audioRef.current = null;
+      engine.stop();
       setAudioEnabled(false);
     }
   }, [audioEnabled]);
 
   useEffect(
     () => () => {
-      audioRef.current?.stop();
+      audioEngineRef.current?.stop();
     },
     [],
   );
@@ -220,8 +173,8 @@ export function FocusScreen() {
   };
 
   const leaveFocus = useCallback(async () => {
-    audioRef.current?.stop();
-    audioRef.current = null;
+    audioEngineRef.current?.stop();
+    audioEngineRef.current = null;
     await exitFullscreen();
     router.push("/student");
   }, [exitFullscreen, router]);
@@ -319,6 +272,29 @@ export function FocusScreen() {
               Compare FCFS, SJF and Round Robin, then calculate basic waiting
               and turnaround time.
             </p>
+          </div>
+
+          <div className="focus-audio-card">
+            <div className="focus-audio-card-text">
+              <span>Study Soundscape</span>
+              <p>Lo-Fi ambient chords for calm, deep academic focus</p>
+            </div>
+            <Button
+              type="button"
+              variant={audioEnabled ? "secondary" : "primary"}
+              size="sm"
+              onClick={toggleAudio}
+            >
+              {audioEnabled ? (
+                <>
+                  <Volume2 size={16} /> Sound Playing (Click to Pause)
+                </>
+              ) : (
+                <>
+                  <VolumeX size={16} /> 🎵 Play study ambient sound
+                </>
+              )}
+            </Button>
           </div>
 
           {currentStep === 1 && (
@@ -527,7 +503,11 @@ export function FocusScreen() {
               <br />
               Your progress is saved.
             </AlertDialog.Description>
-            <p className="exit-wit">
+            <p className="exit-quote-highlight">
+              &ldquo;Now if you are not on BackOnTrack, you will be on railway
+              track.&rdquo;
+            </p>
+            <p className="exit-wit-secondary">
               ESC works here. Friday still arrives on schedule.
             </p>
             <div className="exit-actions">
