@@ -68,7 +68,10 @@ An editorial academic control room: crisp paper-white working surfaces on a quie
 - 2026-09-26: Brand config expanded with full palette, font stacks and copy centralisation.
 - 2026-09-26: Dynamic readiness ring reacts to plan.readiness.
 - 2026-09-26: Fullscreen focus mode with Web Audio ambient chords and exit quotes.
+- 2026-09-26: Added signature exit quote ("Now if you are not on BackOnTrack, you will be on railway track.") across Focus & Ask screens.
+- 2026-09-26: Added animated Backlog Fee warning card (₹3,500 only) with parent reality check photo in Coach Rail.
 - 2026-09-26: Production HTTP client (`src/services/api/http-client.ts`) created and connected to `src/services/api/client.ts` with `.env` toggle.
+- 2026-09-26: Cleaned file system (removed non-standard scratch files, configured cache path for tsbuildinfo, purged unused local store, stopped background processes).
 - 2026-09-26: All 5 CI quality gates passing cleanly (Prettier, ESLint zero warnings, TypeScript, Vitest 7/7 tests, Next.js standalone build).
 - 2026-09-26: Repository cleaned of cache artifacts and pushed to `origin/main` on GitHub.
 
